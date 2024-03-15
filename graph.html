@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <title>Grafos</title>
+  </head>
+
+  <body>
+    
+    <header class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-4">
+        <div class="container mx-auto px-4">
+            <nav class="flex justify-between items-center">
+
+                <ul class="flex gap-6">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="graph.html">Grafos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="sm:px-10">
+      <section>
+               <div class="actions flex justify-center mx-auto gap-x-5 gap-y-2 flex-wrap mt-10">
+                <div class="actions flex justify-center mx-auto gap-x-5 gap-y-2 flex-wrap mt-10">
+                    <div class="select-none text-sm hover:bg-purple-600 disabled:bg-purple-600 disabled:hover:bg-slate-300 flex items-center gap-2 bg-purple-700 py-2 px-4 rounded-lg text-white transition duration-300 ease-in-out" onclick="showAddNodeModal()">
+                        Añadir nodo
+                    </div>
+                    <button disabled action="edit" class="select-none text-sm hover:bg-purple-700 disabled:bg-purple-600 disabled:hover:bg-slate-300 flex items-center gap-2 bg-purple-700 py-2 px-4 rounded-lg text-white transition duration-300 ease-in-out" onclick="showEditNodeModal()">
+                        Editar Nodo
+                    </button>
+                    <button id="buttonAddRelation" disabled action="addRelation" onclick="showAddRelationModal()" class="select-none text-sm hover:bg-purple-700 disabled:bg-purple-600 disabled:hover:bg-slate-300 flex items-center gap-2 bg-purple-600 py-2 px-4 rounded-lg text-white transition duration-300 ease-in-out">
+                        Añadir relación
+                    </button>
+                    <button id="generateDataBtn" class="select-none text-sm hover:bg-purple-700 disabled:bg-purple-600 disabled:hover:bg-slate-300 flex items-center gap-2 bg-green-500 py-2 px-4 rounded-lg text-white transition duration-300 ease-in-out" onclick="GenerateData()">
+                        Generar Data Automática
+                      </button>
+                </div>
+                <div class="actions flex justify-center mx-auto gap-x-5 gap-y-2 flex-wrap mt-10">
+                    <button disabled action="delete" class="select-none text-sm hover:bg-purple-700 disabled:bg-red-600 disabled:hover:bg-slate-300 flex items-center gap-2 bg-red-400 py-2 px-4 rounded-lg text-white transition duration-300 ease-in-out" onclick="showDeleteNodeModal()">
+
+                        Eliminar nodo
+                    </button>
+                    <div class="flex justify-center">
+                        <button id="deleteRelationButton" disabled onclick="DeleteRelation()" class="flex bg-red-600 text-white p-1 rounded hover:bg-red-500 disabled:bg-red-300 disabled:hover:bg-slate-300 transition duration-300 ease-in-out">
+                            <span>Eliminar relacion</span>
+                        </button>
+                    </div>
+                </div>
+                
+
+        <section class=" flex modals border border-dashed border-1 border-slate-400 my-5">
+          <form id="add-node-container" class="flex justify-center hidden my-3">
+            <label for="node-name" class="text-white">Nombre de Nodo</label>
+            <input
+              placeholder="Nombre"
+              name="node-name"
+              id="inputNodeName"
+              class="bg-slate-100 mx-5 py-1 px-2"
+            />
+            <button
+              id="graficarBtn"
+              onclick="AddNode()"
+              class="flex text-white items-center bg-sky-300 hover:bg-sky-400 py-1 px-2 rounded text-center"
+            >
+              Añadir Nodo
+            </button>
+          </form>
+
+          <form
+            id="edit-node-container"
+            class="py-2 flex gap-2 justify-center hidden"
+          >
+            <select
+              data="nodes"
+              id="edit-select-node"
+              class="w-40 bg-slate-200 p-1 rounded-md hover:bg-slate-300"
+            ></select>
+            <label class="text-right p-2" for="new-node-name">Nombre nuevo</label>
+            <input
+              placeholder="Valor"
+              name="new-node-name"
+              id="editInputNodeName"
+              class="bg-slate-100 py-1 px-2"
+            />
+            <button
+              onclick="EditNode()"
+              class="text-white flex items-center bg-amber-400 py-1 px-3 rounded-md hover:bg-amber-500"
+            >
+              Editar nodo
+            </button>
+          </form>
+
+          <form id="delete-node-container" class="hidden">
+            <div class="flex justify-center gap-10 py-3">
+              <select
+                data="nodes"
+                id="deleteSelectNodes"
+                class="w-40 bg-slate-200 p-1 rounded-md hover:bg-slate-300"
+              ></select>
+              <button
+                id="deleteNode"
+                onClick="DeleteNode()"
+                class="text-white flex items-center bg-red-300 text-sm disabled:bg-slate-200 disabled:hover:bg-slate-200 cursor-pointer hover:bg-red-400 py-2 px-4 rounded-md select-none min-w-30 text-center"
+              >
+                Eliminar Nodo
+              </button>
+            </div>
+          </form>
+          <form
+            class="flex py-3 justify-center hidden"
+            id="add-relation-container"
+          >
+            <label for="">de</label>
+            <select
+              data="nodes"
+              id="from-relation"
+              class="w-40 mx-2 bg-slate-200 hover:bg-slate-100 rounded-md"
+            ></select>
+            <input
+              type="text"
+              placeholder="Valor"
+              id="adding-relation-name"
+              class="mr-2 w-32 text-center bg-slate-100"
+            />
+            <label for="">a</label>
+            <select
+              data="nodes"
+              id="to-relation"
+              class="w-40 mx-2 bg-slate-200 hover:bg-slate-100 rounded-md"
+            ></select>
+            <button
+              onclick="AddRelation()"
+              class="flex justify-center items-center bg-amber-400 py-1 px-3 rounded-md text-white"
+            >
+              Añadir relacion
+            </button>
+          </form>
+          
+        </section>
+      </section>
+      <div
+        id="grafica"
+        style="background: black"
+        class="w-full shadow-2xl mx-auto my-3 h-[700px] border border-1 border-solid border-slate-400"
+      ></div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
